@@ -188,3 +188,6 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Ignore model weight file.
+*.pth
