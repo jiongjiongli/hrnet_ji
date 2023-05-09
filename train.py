@@ -355,7 +355,7 @@ if __name__ == "__main__":
     num_train = int(len(img_paths) - num_val)
 
     train_imgs = img_paths[:num_train]
-    val_imgs = img_paths[:num_val]
+    val_imgs = img_paths[num_train:]
 
 
     if local_rank == 0:

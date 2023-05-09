@@ -5,5 +5,7 @@ cp /home/data/1827/* /home/data/789/
 cp /home/data/1857/* /home/data/789/
 cp /home/data/1858/* /home/data/789/
 cp /home/data/1859/* /home/data/789/
+# Check data.
+python /project/train/src_repo/hrnet_ji/experiment.py
 CUDA_VISIBLE_DEVICES=0 python /project/train/src_repo/hrnet_ji/train.py
 python /project/train/src_repo/hrnet_ji/toonnx.py
