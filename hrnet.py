@@ -63,6 +63,8 @@ class HRnet_Segmentation(object):
         self.__dict__.update(self._defaults)
         for name, value in kwargs.items():
             setattr(self, name, value)
+            self._defaults[name] = value
+
         # ---------------------------------------------------#
         #   画框设置不同的颜色
         # ---------------------------------------------------#
