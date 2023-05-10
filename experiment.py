@@ -6,6 +6,8 @@ from datetime import datetime
 from utils.dataloader import SegmentationDataset
 
 
+num_classes   = 2
+input_shape = [512, 512]
 data_dir_path = r'/home/data'
 data_dir_path = Path(data_dir_path)
 
@@ -74,10 +76,10 @@ def check_data_files():
                 data_issues_count += 1
 
             unique_labels = np.unique(label_data)
-            is_label_valid1 = np.array_equal(unique_labels, np.array([0]))
-            is_label_valid2 = np.array_equal(unique_labels, np.array([0, 1]))
+            is_label_valid1 = np.any(unique_labels == 0)
+            is_label_valid2 = np.all((0 <= unique_labels) & (unique_labels < num_classes))
 
-            if not (is_label_valid1 or is_label_valid2):
+            if not (is_label_valid1 and is_label_valid2):
                 print('Label not valid!', unique_labels)
                 invalid_label_file_paths.append(label_data_file_path)
                 data_issues_count += 1
@@ -109,10 +111,7 @@ def check_data_enhance():
 
     data_file_paths = list(data_dir_path.rglob('*.jpg'))
 
-    root = None
     img_paths = data_file_paths
-    input_shape = [512, 512]
-    num_classes = 2
     dataset = SegmentationDataset(img_paths, input_shape, num_classes, True)
     input_data_dtype_set = set()
     label_data_dtype_set = set()
@@ -137,10 +136,10 @@ def check_data_enhance():
 
             unique_labels        = np.unique(label_data)
 
-            is_label_valid       = np.all((0 <= unique_labels) & (unique_labels <= 1))
+            is_label_valid       = np.all((0 <= unique_labels) & (unique_labels < num_classes))
 
             if not is_label_valid:
-                print('Label not valid!', unique_labels, label_data_file_path)
+                print('Enhanced label not valid!', unique_labels, label_data_file_path)
 
     print('input_data_dtypes:', input_data_dtype_set)
     print('label_data_dtypes:', label_data_dtype_set)
