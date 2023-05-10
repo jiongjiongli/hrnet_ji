@@ -24,7 +24,7 @@ class LossHistory():
         self.log_dir    = log_dir
         self.losses     = []
         self.val_loss   = []
-        
+
         os.makedirs(self.log_dir)
         self.writer     = SummaryWriter(self.log_dir)
         try:
@@ -62,7 +62,7 @@ class LossHistory():
                 num = 5
             else:
                 num = 15
-            
+
             plt.plot(iters, scipy.signal.savgol_filter(self.losses, num, 3), 'green', linestyle = '--', linewidth = 2, label='smooth train loss')
             plt.plot(iters, scipy.signal.savgol_filter(self.val_loss, num, 3), '#8B4513', linestyle = '--', linewidth = 2, label='smooth val loss')
         except:
@@ -79,7 +79,7 @@ class LossHistory():
         plt.close("all")
 
 class EvalCallback():
-    def __init__(self, net, input_shape, num_classes, val_paths, root, log_dir, cuda, \
+    def __init__(self, net, input_shape, num_classes, val_paths, log_dir, cuda, \
                  miou_out_path=".temp_miou_out", eval_flag=True, period=1):
         super(EvalCallback, self).__init__()
 
@@ -87,7 +87,6 @@ class EvalCallback():
         self.input_shape = input_shape
         self.num_classes = num_classes
         self.val_paths = val_paths
-        self.root = root
         self.log_dir = log_dir
         self.cuda = cuda
         self.miou_out_path = miou_out_path
@@ -151,14 +150,13 @@ class EvalCallback():
     def on_epoch_end(self, epoch, model_eval):
         if epoch % self.period == 0 and self.eval_flag:
             self.net = model_eval
-            gt_dir = self.root
             pred_dir = os.path.join(self.miou_out_path, 'detection-results')
             if not os.path.exists(self.miou_out_path):
                 os.makedirs(self.miou_out_path)
             if not os.path.exists(pred_dir):
                 os.makedirs(pred_dir)
             print("Get miou.")
-            val_name_list = []
+
             for image_path in tqdm(self.val_paths):
                 # -------------------------------#
                 #   从文件中读取图像
@@ -169,16 +167,13 @@ class EvalCallback():
                 #   获得预测txt
                 # ------------------------------#
                 image = self.get_miou_png(image)
-                if 'win' in sys.platform:
-                    name = image_path.split('.')[0].split('\\')[-1]
-                else:
-                    name = image_path.split('.')[0].split('/')[-1]
-                val_name_list.append(name)
-                image.save(os.path.join(pred_dir, name + ".png"))
+
+                image.save(os.path.join(pred_dir, image_path.with_suffix('.png').name))
 
             print("Calculate miou.")
+            gt_path_list = [val_path.with_suffix('.png') for val_path in self.val_paths]
 
-            _, IoUs, _, _ = compute_mIoU(gt_dir, pred_dir, val_name_list, self.num_classes, None)  # 执行计算mIoU的函数
+            _, IoUs, _, _ = compute_mIoU(pred_dir, gt_path_list, self.num_classes, None)  # 执行计算mIoU的函数
             temp_miou = np.nanmean(IoUs) * 100
 
             self.mious.append(temp_miou)

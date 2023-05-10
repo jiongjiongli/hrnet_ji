@@ -1,11 +1,3 @@
-cp /home/data/1824/* /home/data/789/
-cp /home/data/1825/* /home/data/789/
-cp /home/data/1826/* /home/data/789/
-cp /home/data/1827/* /home/data/789/
-cp /home/data/1857/* /home/data/789/
-cp /home/data/1858/* /home/data/789/
-cp /home/data/1859/* /home/data/789/
-
 cd /project/train/src_repo/hrnet_ji
 # Check data.
 python /project/train/src_repo/hrnet_ji/experiment.py

@@ -9,36 +9,32 @@ from utils.utils import preprocess_input, cvtColor
 import sys
 
 class SegmentationDataset(Dataset):
-    def __init__(self, img_paths, input_shape, num_classes, train, root):
+    def __init__(self, img_paths, input_shape, num_classes, train):
         super(SegmentationDataset, self).__init__()
         self.img_paths = img_paths
         self.length             = len(img_paths)
         self.input_shape        = input_shape
         self.num_classes        = num_classes
         self.train              = train
-        self.root = root
+
     def __len__(self):
         return self.length
 
     def __getitem__(self, index):
         img_path = self.img_paths[index]
-        if 'win' in sys.platform:
-            name = img_path.split('.')[0].split('\\')[-1]
-        else:
-            name            = img_path.split('.')[0].split('/')[-1]
         #-------------------------------#
         #   从文件中读取图像
         #-------------------------------#
-        img         = Image.open(os.path.join(self.root,  name + ".jpg"))
-        label         = Image.open(os.path.join(self.root, name + ".png"))
+        img           = Image.open(img_path.as_posix())
+        label         = Image.open(img_path.with_suffix('.png').as_posix())
         #-------------------------------#
         #   数据增强
         #-------------------------------#
         img, label    = self.get_random_data(img, label, self.input_shape, random = self.train)
 
-        img         = np.transpose(preprocess_input(np.array(img, np.float64)), [2,0,1])
+        img           = np.transpose(preprocess_input(np.array(img, np.float64)), [2,0,1])
         label         = np.array(label)
-        label[label >= self.num_classes] = self.num_classes
+        label[label  >= self.num_classes] = self.num_classes
         #-------------------------------------------------------#
         #   转化成one_hot的形式
         #   在这里需要+1是因为voc数据集有些标签具有白边部分
@@ -46,7 +42,7 @@ class SegmentationDataset(Dataset):
         #-------------------------------------------------------#
         seg_labels  = np.eye(self.num_classes+1)[label.reshape([-1])]
         seg_labels  = seg_labels.reshape((int(self.input_shape[0]), int(self.input_shape[1]), self.num_classes+1))
-        
+
         # print("####label",label.min(),label.max())
         return img, label, seg_labels
 
@@ -150,7 +146,7 @@ class SegmentationDataset(Dataset):
 
         image_data = cv2.merge((cv2.LUT(hue, lut_hue), cv2.LUT(sat, lut_sat), cv2.LUT(val, lut_val)))
         image_data = cv2.cvtColor(image_data, cv2.COLOR_HSV2RGB)
-        
+
         return image_data, label
 
 

@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from PIL import Image
 from tqdm import tqdm
@@ -34,7 +35,7 @@ if __name__ == "__main__":
     #-------------------------------------------------------#
     VOCdevkit_path  = 'VOCdevkit'
 
-    image_ids       = open(os.path.join(VOCdevkit_path, "VOC2007/ImageSets/Segmentation/val.txt"),'r').read().splitlines() 
+    image_ids       = open(os.path.join(VOCdevkit_path, "VOC2007/ImageSets/Segmentation/val.txt"),'r').read().splitlines()
     gt_dir          = os.path.join(VOCdevkit_path, "VOC2007/SegmentationClass/")
     miou_out_path   = "miou_out"
     pred_dir        = os.path.join(miou_out_path, 'detection-results')
@@ -42,7 +43,7 @@ if __name__ == "__main__":
     if miou_mode == 0 or miou_mode == 1:
         if not os.path.exists(pred_dir):
             os.makedirs(pred_dir)
-            
+
         print("Load model.")
         hrnet = HRnet_Segmentation()
         print("Load model done.")
@@ -57,6 +58,7 @@ if __name__ == "__main__":
 
     if miou_mode == 0 or miou_mode == 2:
         print("Get miou.")
-        hist, IoUs, PA_Recall, Precision = compute_mIoU(gt_dir, pred_dir, image_ids, num_classes, name_classes)  # 执行计算mIoU的函数
+        gt_path_list = [Path(gt_dir) / '{}.png'.format(image_id) for image_id in image_ids]
+        hist, IoUs, PA_Recall, Precision = compute_mIoU(gt_dir, pred_dir, gt_path_list, num_classes, name_classes)  # 执行计算mIoU的函数
         print("Get miou done.")
         show_results(miou_out_path, hist, IoUs, PA_Recall, Precision, name_classes)
