@@ -59,6 +59,6 @@ if __name__ == "__main__":
     if miou_mode == 0 or miou_mode == 2:
         print("Get miou.")
         gt_path_list = [Path(gt_dir) / '{}.png'.format(image_id) for image_id in image_ids]
-        hist, IoUs, PA_Recall, Precision = compute_mIoU(gt_dir, pred_dir, gt_path_list, num_classes, name_classes)  # 执行计算mIoU的函数
+        hist, IoUs, PA_Recall, Precision = compute_mIoU(pred_dir, gt_path_list, num_classes, name_classes)  # 执行计算mIoU的函数
         print("Get miou done.")
         show_results(miou_out_path, hist, IoUs, PA_Recall, Precision, name_classes)

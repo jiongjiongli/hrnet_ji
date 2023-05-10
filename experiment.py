@@ -113,7 +113,7 @@ def check_data_enhance():
     img_paths = data_file_paths
     input_shape = [512, 512]
     num_classes = 2
-    dataset = SegmentationDataset(img_paths, input_shape, num_classes, True, root)
+    dataset = SegmentationDataset(img_paths, input_shape, num_classes, True)
     input_data_dtype_set = set()
     label_data_dtype_set = set()
 
