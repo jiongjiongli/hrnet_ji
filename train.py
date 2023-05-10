@@ -110,8 +110,8 @@ if __name__ == "__main__":
     #   一般来讲，网络从0开始的训练效果会很差，因为权值太过随机，特征提取效果不明显，因此非常、非常、非常不建议大家从0开始训练！
     #   如果一定要从0开始，可以了解imagenet数据集，首先训练分类模型，获得网络的主干部分权值，分类模型的 主干部分 和该模型通用，基于此进行训练。
     #----------------------------------------------------------------------------------------------------------------------------#
-    model_path      = "/project/train/src_repo/hrnet_ji/model_data/hrnetv2_w32_weights_voc.pth"
-    # model_path      = "/project/train/models/last_epoch_weights.pth"
+    # model_path      = "/project/train/src_repo/hrnet_ji/model_data/hrnetv2_w32_weights_voc.pth"
+    model_path      = "/project/train/models/last_epoch_weights.pth"
     #------------------------------#
     #   输入图片的大小
     #------------------------------#
@@ -157,7 +157,7 @@ if __name__ == "__main__":
     #   Freeze_batch_size   模型冻结训练的batch_size
     #                       (当Freeze_Train=False时失效)
     #------------------------------------------------------------------#
-    Init_Epoch          = 0
+    Init_Epoch          = 4
     Freeze_Epoch        = 5
     Freeze_batch_size   = 16
     #------------------------------------------------------------------#
