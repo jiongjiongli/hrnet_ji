@@ -18,6 +18,7 @@ from utils.dataloader import SegmentationDataset, seg_dataset_collate
 from utils.ji_data import ji_data
 from utils.utils import download_weights, show_config
 from utils.utils_fit import fit_one_epoch
+from utils.filter_data import filter_data
 # os.environ['CUDA_LAUNCH_BLOCKING'] = '1'
 '''
 训练自己的语义分割模型一定需要注意以下几点：
@@ -344,7 +345,11 @@ if __name__ == "__main__":
     #---------------------------#
     #   读取数据集
     #---------------------------#
-    img_paths = list(Path(ROOT).rglob('*.jpg'))
+    all_img_paths = list(Path(ROOT).rglob('*.jpg'))
+    img_paths = filter_data(all_img_paths, num_classes)
+    print('all_img_paths count:', len(all_img_paths),
+          'img_paths count:', len(img_paths))
+
     val_split = 0.1
     np.random.seed(66666)
     state = np.random.get_state()
