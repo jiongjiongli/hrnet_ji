@@ -151,7 +151,6 @@ def check_data_enhance():
 def main():
     check_data_files()
     check_data_enhance()
-    check_data_enhance()
 
 
 if __name__ == '__main__':
