@@ -39,9 +39,9 @@ class HRnetConverter:
         self.input_shape = input_shape
         self.net = HRnetPredict(num_classes=num_classes, backbone=backbone, pretrained=pretrained)
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        self.net.load_state_dict(torch.load(self.model_path, map_location=device))
+        self.net.load_state_dict(torch.load(model_path, map_location=device))
         self.net = self.net.eval()
-        print('{} model, and classes loaded.'.format(self.model_path))
+        print('{} model, and classes loaded.'.format(model_path))
 
     def convert_to_onnx(self, simplify, onnx_save_path):
         im = torch.zeros(1, 3, *self.input_shape).to('cpu')  # image size(1, 3, 512, 512) BCHW
@@ -73,9 +73,9 @@ class HRnetConverter:
                 dynamic_input_shape=False,
                 input_shapes=None)
             assert check, 'assert check failed'
-            onnx.save(model_onnx, model_path)
+            onnx.save(model_onnx, onnx_save_path)
 
-        print('Onnx model save as {}'.format(model_path))
+        print('Onnx model save as {}'.format(onnx_save_path))
 
 
 def main():
